@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+
+    <address>
+        One Microsoft Way<br />
+        Redmond, WA 98052-6399<br />
+        <abbr title="Phone">P:</abbr>
+        425.555.0100
+    </address>
+
+    <address>
+        <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
+        <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+    </address>
+
+    <div class="container">
+        <h2>Contact Us</h2>
+        <form method="post" id="contactForm" action="/Home/SubmitContact">
+            <div class="form-group">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <div class="form-group">
+                <div id="recaptcha-container"></div>
+                <button type="submit">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+@section scripts {
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            grecaptcha.enterprise.execute('6LflQBgqAAAAABz5tdqlQFQZR2FKiRHu2g1xi5Hg', { action: 'contact_form' })
+                .then(function (token) {
+                    var form = document.getElementById('contactForm');
+                    var tokenInput = document.createElement('input');
+                    tokenInput.type = 'hidden';
+                    tokenInput.name = 'recaptchaToken';
+                    tokenInput.value = token;
+                    form.appendChild(tokenInput);
+                    form.submit();
+                });
+        });
+    </script>
+    <!--<script>
+        function onClick() {
+            grecaptcha.enterprise.ready(async () => {
+                const token = await grecaptcha.enterprise.execute('6LflQBgqAAAAABz5tdqlQFQZR2FKiRHu2g1xi5Hg', { action: 'LOGIN' });
+                var element = document.getElementById('g-recaptcha-response');
+                console.log(token, "teken");
+                element.textContent = token;
+            });
+        }
+        onClick();
+    </script>-->
+
+    <!-- Replace the variables below. -->
+    <!--<script>
+        function onSubmit(token) {
+            document.getElementById("demo-form").submit();
+        }
+    </script>-->
+}
